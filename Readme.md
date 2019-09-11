@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Артём Судаков](https://up.htmlacademy.ru/javascript/18/user/891745).
-* Наставник: `Неизвестно`.
+* Наставник: [Александр Козлов](https://htmlacademy.ru/profile/id1163617).
 
 ---
 
