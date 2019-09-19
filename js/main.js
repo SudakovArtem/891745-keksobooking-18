@@ -7,7 +7,7 @@ var mapWidth = document.querySelector('.map__pins').offsetWidth;
 var similarMapPin = map.querySelector('.map__pins');
 var mapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
-var ADVERT_LENGHT = 8;
+var ADVERT_LENGTH = 8;
 var TYPE = ['palace', 'flat', 'house', 'bungalo']; // строка с одним из четырёх фиксированных значений: palace, flat, house или bungalo
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner']; // массив строк случайной длины из ниже предложенных: 'wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner',
 var FEATURES_START = 0;
@@ -45,7 +45,7 @@ var generateArray = function (len) {
   return r.sort(getSomeIndex);
 };
 
-var avatar = generateArray(ADVERT_LENGHT);
+var avatar = generateArray(ADVERT_LENGTH);
 
 var getRandomInRange = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -67,7 +67,7 @@ var getImageNumber = function (arr) {
 };
 
 var getMock = function (arr) {
-  for (var i = 0; i < ADVERT_LENGHT; i++) {
+  for (var i = 0; i < ADVERT_LENGTH; i++) {
     arr[i] = {
       'author': {
         'avatar': 'img/avatars/user0' + getImageNumber(avatar) + '.png' // строка, адрес изображения вида img/avatars/user{{xx}}.png, где {{xx}} это число от 1 до 8 с ведущим нулём. Например, 01, 02 и т. д. Адреса изображений не повторяются
