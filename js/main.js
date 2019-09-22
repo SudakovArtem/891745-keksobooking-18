@@ -14,7 +14,7 @@ var NUMBER_OF_ROOMS_MAX = 5;
 var NUMBER_OF_GUESTS_MIN = 1;
 var NUMBER_OF_GUESTS_MAX = 5;
 var CHECK_IN_OUT_MIN = 12;
-var CHECK_IN_OUT_MAX = 12;
+var CHECK_IN_OUT_MAX = 14;
 var LOCATION_X_MIN = 0;
 var LOCATION_X_MAX = mapWidth;
 var LOCATION_Y_MIN = 130;
@@ -78,7 +78,7 @@ var getMock = function () {
       'offer': {
         'title': 'title text', // строка, заголовок предложения
         'address': '600, 350', // строка, адрес предложения. Для простоты пусть пока представляет собой запись вида '{{location.x}}, {{location.y}}', например, '600, 350'
-        'price': getRandomInRange(COST_MIN, COST_MAX) + '000', // число, стоимость
+        'price': getRandomInRange(COST_MIN, COST_MAX) + addZeros('', 3), // число, стоимость
         'type': getRandom(TYPE), // строка с одним из четырёх фиксированных значений: palace, flat, house или bungalo
         'rooms': getRandomInRange(NUMBER_OF_ROOMS_MIN, NUMBER_OF_ROOMS_MAX), // число, количество комнат
         'guests': getRandomInRange(NUMBER_OF_GUESTS_MIN, NUMBER_OF_GUESTS_MAX), // число, количество гостей, которое можно разместить
