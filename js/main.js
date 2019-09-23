@@ -116,11 +116,19 @@ var renderCard = function (elem) {
   var mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
   var cardElement = mapCardTemplate.cloneNode(true);
   var photos = cardElement.querySelector('.popup__photos');
+  var features = cardElement.querySelector('.popup__features');
 
   var getPhotos = function (val) {
     val.innerHTML = '';
     for (var i = 0; i < elem.offer.photos.length; i++) {
       val.insertAdjacentHTML('afterbegin', '<img src="' + elem.offer.photos[i] + '" class="popup__photo" width="45" height="40" alt="Фотография жилья">');
+    }
+  };
+
+  var getFeatures = function (val) {
+    val.innerHTML = '';
+    for (var i = 0; i < elem.offer.features.length; i++) {
+      val.insertAdjacentHTML('afterbegin', '<li class="popup__feature popup__feature--' + elem.offer.features[i] + '"></li>');
     }
   };
 
@@ -147,7 +155,7 @@ var renderCard = function (elem) {
   getType();
   cardElement.querySelector('.popup__text--capacity ').textContent = elem.offer.rooms + ' комнаты для ' + elem.offer.guests + ' гостей';
   cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + elem.offer.checkin + ', выезд до ' + elem.offer.checkout;
-  cardElement.querySelector('.popup__features').textContent = elem.offer.features.toString();
+  getFeatures(features);
   cardElement.querySelector('.popup__description').textContent = elem.offer.description;
   cardElement.querySelector('.popup__photos > img').src = elem.offer.photos[0];
   getPhotos(photos);
