@@ -21,6 +21,12 @@ var LOCATION_Y_MIN = 130;
 var LOCATION_Y_MAX = 630;
 var CURRENCY = '₽/ночь';
 
+var form = document.querySelector('.ad-form');
+
+var formElement = form.querySelectorAll('.ad-form__element');
+var address = document.querySelector('#address');
+
+
 var getRandom = function (arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 };
@@ -175,6 +181,12 @@ var renderCard = function (elem) {
 
 var getSimilarAdverts = function () {
   var map = document.querySelector('.map');
+  document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+
+  formElement.forEach(function (item) {
+    item.removeAttribute('disabled');
+  });
+
   map.classList.remove('map--faded');
   var similarMapPin = map.querySelector('.map__pins');
   var fragment = document.createDocumentFragment();
@@ -187,4 +199,42 @@ var getSimilarAdverts = function () {
   return offers;
 };
 
-getSimilarAdverts();
+// getSimilarAdverts();
+
+formElement.forEach(function (item) {
+  item.setAttribute('disabled', 'disabled');
+});
+
+var mapPinMain = document.querySelector('.map__pin--main');
+address.value = mapPinMain.style.left + ' ' + // расстояние до острого конца по горизонтали
+  mapPinMain.style.top; // расстояние до острого конца по вертикали
+
+var mapPinClickHandler = function () {
+  getSimilarAdverts();
+  mapPinMain.removeEventListener('mousedown', mapPinClickHandler);
+  mapPinMain.removeEventListener('keydown', mapPinPressEnterHandler);
+};
+
+var mapPinPressEnterHandler = function (evt) {
+  if (evt.keyCode === 13) {
+    getSimilarAdverts();
+    mapPinMain.removeEventListener('keydown', mapPinPressEnterHandler);
+    mapPinMain.removeEventListener('mousedown', mapPinClickHandler);
+  }
+};
+
+mapPinMain.addEventListener('mousedown', mapPinClickHandler);
+mapPinMain.addEventListener('keydown', mapPinPressEnterHandler);
+
+form.addEventListener('invalid', function () {
+  if (form.validity.tooShort) {
+    form.setCustomValidity('Имя должно состоять минимум из 2-х символов');
+  } else if (form.validity.tooLong) {
+    form.setCustomValidity('Имя не должно превышать 25-ти символов');
+  } else if (form.validity.valueMissing) {
+    form.setCustomValidity('Обязательное поле');
+  } else {
+    form.setCustomValidity('');
+  }
+});
+
