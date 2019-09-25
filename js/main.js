@@ -19,6 +19,7 @@ var LOCATION_X_MIN = 0;
 var LOCATION_X_MAX = mapWidth;
 var LOCATION_Y_MIN = 130;
 var LOCATION_Y_MAX = 630;
+var CURRENCY = '₽/ночь';
 
 var getRandom = function (arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -110,61 +111,67 @@ var renderPin = function (elem) {
   return pinElement;
 };
 
-// ---------------------Задание 3--------------------------------------------
-
 var renderCard = function (elem) {
   var mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
   var cardElement = mapCardTemplate.cloneNode(true);
   var photos = cardElement.querySelector('.popup__photos');
   var features = cardElement.querySelector('.popup__features');
 
-  var getPhotos = function (val) {
-    val.innerHTML = '';
+  var insertPhotos = function (block) {
+    block.innerHTML = '';
     for (var i = 0; i < elem.offer.photos.length; i++) {
-      val.insertAdjacentHTML('afterbegin', '<img src="' + elem.offer.photos[i] + '" class="popup__photo" width="45" height="40" alt="Фотография жилья">');
+      block.insertAdjacentHTML('afterbegin', '<img src="' + elem.offer.photos[i] + '" class="popup__photo" width="45" height="40" alt="Фотография жилья">');
     }
   };
 
-  var getFeatures = function (val) {
-    val.innerHTML = '';
+  var insertFeatures = function (block) {
+    block.innerHTML = '';
     for (var i = 0; i < elem.offer.features.length; i++) {
-      val.insertAdjacentHTML('afterbegin', '<li class="popup__feature popup__feature--' + elem.offer.features[i] + '"></li>');
+      block.insertAdjacentHTML('afterbegin', '<li class="popup__feature popup__feature--' + elem.offer.features[i] + '"></li>');
     }
   };
 
-  var getType = function () {
+  var insertType = function () {
+
+    var popupType = cardElement.querySelector('.popup__type');
     switch (elem.offer.type) {
       case 'palace':
-        cardElement.querySelector('.popup__type').textContent = 'Дворец';
+        popupType.textContent = 'Дворец';
         break;
       case 'flat':
-        cardElement.querySelector('.popup__type').textContent = 'Квартира';
+        popupType.textContent = 'Квартира';
         break;
       case 'house':
-        cardElement.querySelector('.popup__type').textContent = 'Дом';
+        popupType.textContent = 'Дом';
         break;
       case 'bungalo':
-        cardElement.querySelector('.popup__type').textContent = 'Бунгало';
+        popupType.textContent = 'Бунгало';
         break;
     }
+  };
+
+  var getCapacityStr = function (numberOfRooms, numberOfGuests) {
+    return numberOfRooms + ' комнаты для ' + numberOfGuests + ' гостей';
+  };
+
+  var getTimeStr = function (checkinTime, checkoutTime) {
+    return checkinTime + ' комнаты для ' + checkoutTime + ' гостей';
   };
 
   cardElement.querySelector('.popup__title').textContent = elem.offer.title;
   cardElement.querySelector('.popup__text--address').textContent = elem.offer.address;
-  cardElement.querySelector('.popup__text--price').textContent = elem.offer.price + '₽/ночь';
-  getType();
-  cardElement.querySelector('.popup__text--capacity ').textContent = elem.offer.rooms + ' комнаты для ' + elem.offer.guests + ' гостей';
-  cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + elem.offer.checkin + ', выезд до ' + elem.offer.checkout;
-  getFeatures(features);
+  cardElement.querySelector('.popup__text--price').textContent = elem.offer.price + CURRENCY;
+  insertType();
+  cardElement.querySelector('.popup__text--capacity ').textContent = getCapacityStr(elem.offer.rooms, elem.offer.guests);
+  cardElement.querySelector('.popup__text--time').textContent = getTimeStr(elem.offer.checkin, elem.offer.checkout);
+  insertFeatures(features);
   cardElement.querySelector('.popup__description').textContent = elem.offer.description;
   cardElement.querySelector('.popup__photos > img').src = elem.offer.photos[0];
-  getPhotos(photos);
+  insertPhotos(photos);
   cardElement.querySelector('.popup__avatar').src = elem.author.avatar;
 
   return cardElement;
 };
-
-// ---------------------Задание 3--------------------------------------------
 
 var getSimilarAdverts = function () {
   var map = document.querySelector('.map');
@@ -175,7 +182,7 @@ var getSimilarAdverts = function () {
   for (var i = 0; i < offers.length; i++) {
     fragment.appendChild(renderPin(offers[i]));
   }
-  fragment.appendChild(renderCard(offers[0])); // Задание 3
+  fragment.appendChild(renderCard(offers[0]));
   similarMapPin.appendChild(fragment);
   return offers;
 };
