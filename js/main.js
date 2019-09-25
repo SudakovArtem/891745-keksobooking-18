@@ -19,6 +19,7 @@ var LOCATION_X_MIN = 0;
 var LOCATION_X_MAX = mapWidth;
 var LOCATION_Y_MIN = 130;
 var LOCATION_Y_MAX = 630;
+var CURRENCY = '₽/ночь';
 
 var getRandom = function (arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -76,8 +77,8 @@ var getMock = function () {
       },
 
       'offer': {
-        'title': 'title text', // строка, заголовок предложения
-        'address': '600, 350', // строка, адрес предложения. Для простоты пусть пока представляет собой запись вида '{{location.x}}, {{location.y}}', например, '600, 350'
+        'title': 'Заголовок объявления', // строка, заголовок предложения
+        'address': 'Адрес предложения', // строка, адрес предложения. Для простоты пусть пока представляет собой запись вида '{{location.x}}, {{location.y}}', например, '600, 350'
         'price': getRandomInRange(COST_MIN, COST_MAX) + addZeros('', 3), // число, стоимость
         'type': getRandom(TYPE), // строка с одним из четырёх фиксированных значений: palace, flat, house или bungalo
         'rooms': getRandomInRange(NUMBER_OF_ROOMS_MIN, NUMBER_OF_ROOMS_MAX), // число, количество комнат
@@ -85,7 +86,7 @@ var getMock = function () {
         'checkin': getRandomInRange(CHECK_IN_OUT_MIN, CHECK_IN_OUT_MAX) + ':' + addZeros('', 2), // строка с одним из трёх фиксированных значений: 12:00, 13:00 или 14:00,
         'checkout': getRandomInRange(CHECK_IN_OUT_MIN, CHECK_IN_OUT_MAX) + ':' + addZeros('', 2), // строка с одним из трёх фиксированных значений: 12:00, 13:00 или 14:00
         'features': getRandomList(FEATURES, FEATURES_START, FEATURES.length), // массив строк случайной длины из ниже предложенных: 'wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner',
-        'description': 'description text', // строка с описанием,
+        'description': 'Описание объекта недвижимости', // строка с описанием,
         'photos': getRandomList(PHOTOS, PHOTOS_START, PHOTOS.length), // массив строк случайной длины, содержащий адреса фотографий 'http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
       },
 
@@ -110,6 +111,68 @@ var renderPin = function (elem) {
   return pinElement;
 };
 
+var renderCard = function (elem) {
+  var mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+  var cardElement = mapCardTemplate.cloneNode(true);
+  var photos = cardElement.querySelector('.popup__photos');
+  var features = cardElement.querySelector('.popup__features');
+
+  var insertPhotos = function (block) {
+    block.innerHTML = '';
+    for (var i = 0; i < elem.offer.photos.length; i++) {
+      block.insertAdjacentHTML('afterbegin', '<img src="' + elem.offer.photos[i] + '" class="popup__photo" width="45" height="40" alt="Фотография жилья">');
+    }
+  };
+
+  var insertFeatures = function (block) {
+    block.innerHTML = '';
+    for (var i = 0; i < elem.offer.features.length; i++) {
+      block.insertAdjacentHTML('afterbegin', '<li class="popup__feature popup__feature--' + elem.offer.features[i] + '"></li>');
+    }
+  };
+
+  var insertType = function () {
+
+    var popupType = cardElement.querySelector('.popup__type');
+    switch (elem.offer.type) {
+      case 'palace':
+        popupType.textContent = 'Дворец';
+        break;
+      case 'flat':
+        popupType.textContent = 'Квартира';
+        break;
+      case 'house':
+        popupType.textContent = 'Дом';
+        break;
+      case 'bungalo':
+        popupType.textContent = 'Бунгало';
+        break;
+    }
+  };
+
+  var getCapacityStr = function (numberOfRooms, numberOfGuests) {
+    return numberOfRooms + ' комнаты для ' + numberOfGuests + ' гостей';
+  };
+
+  var getTimeStr = function (checkinTime, checkoutTime) {
+    return checkinTime + ' комнаты для ' + checkoutTime + ' гостей';
+  };
+
+  cardElement.querySelector('.popup__title').textContent = elem.offer.title;
+  cardElement.querySelector('.popup__text--address').textContent = elem.offer.address;
+  cardElement.querySelector('.popup__text--price').textContent = elem.offer.price + CURRENCY;
+  insertType();
+  cardElement.querySelector('.popup__text--capacity ').textContent = getCapacityStr(elem.offer.rooms, elem.offer.guests);
+  cardElement.querySelector('.popup__text--time').textContent = getTimeStr(elem.offer.checkin, elem.offer.checkout);
+  insertFeatures(features);
+  cardElement.querySelector('.popup__description').textContent = elem.offer.description;
+  cardElement.querySelector('.popup__photos > img').src = elem.offer.photos[0];
+  insertPhotos(photos);
+  cardElement.querySelector('.popup__avatar').src = elem.author.avatar;
+
+  return cardElement;
+};
+
 var getSimilarAdverts = function () {
   var map = document.querySelector('.map');
   map.classList.remove('map--faded');
@@ -119,6 +182,7 @@ var getSimilarAdverts = function () {
   for (var i = 0; i < offers.length; i++) {
     fragment.appendChild(renderPin(offers[i]));
   }
+  fragment.appendChild(renderCard(offers[0]));
   similarMapPin.appendChild(fragment);
   return offers;
 };
