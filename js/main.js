@@ -224,15 +224,20 @@ var mapPinPressEnterHandler = function (evt) {
 mapPinMain.addEventListener('mousedown', mapPinClickHandler);
 mapPinMain.addEventListener('keydown', mapPinPressEnterHandler);
 
-form.addEventListener('invalid', function () {
-  if (form.validity.tooShort) {
-    form.setCustomValidity('Имя должно состоять минимум из 2-х символов');
-  } else if (form.validity.tooLong) {
-    form.setCustomValidity('Имя не должно превышать 25-ти символов');
-  } else if (form.validity.valueMissing) {
-    form.setCustomValidity('Обязательное поле');
+form.addEventListener('invalid', function (evt) {
+  var target = evt.target;
+  if (target.validity.tooShort) {
+    target.setCustomValidity('Заголовок должен состоять минимум из 30 символов');
+  } else if (target.validity.tooLong) {
+    target.setCustomValidity('Заголовок не должен превышать 100 символов');
+  } else if (target.validity.rangeOverflow) {
+    target.setCustomValidity('Максимальное значение — 1 000 000');
+  } else if (target.validity.badInput) {
+    target.setCustomValidity('Неправильный формат значения');
+  } else if (target.validity.valueMissing) {
+    target.setCustomValidity('Обязательное поле');
   } else {
-    form.setCustomValidity('');
+    target.setCustomValidity('');
   }
 }, true);
 
