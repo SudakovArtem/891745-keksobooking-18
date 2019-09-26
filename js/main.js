@@ -20,9 +20,10 @@ var LOCATION_X_MAX = mapWidth;
 var LOCATION_Y_MIN = 130;
 var LOCATION_Y_MAX = 630;
 var CURRENCY = '₽/ночь';
+var ENTER_KEYCODE = 13;
 
 var form = document.querySelector('.ad-form');
-
+var mapPinMain = document.querySelector('.map__pin--main');
 var formElement = form.querySelectorAll('.ad-form__element');
 var address = document.querySelector('#address');
 
@@ -199,13 +200,10 @@ var getSimilarAdverts = function () {
   return offers;
 };
 
-// getSimilarAdverts();
-
 formElement.forEach(function (item) {
   item.setAttribute('disabled', 'disabled');
 });
 
-var mapPinMain = document.querySelector('.map__pin--main');
 address.value = mapPinMain.style.left + ' ' + // расстояние до острого конца по горизонтали
   mapPinMain.style.top; // расстояние до острого конца по вертикали
 
@@ -216,7 +214,7 @@ var mapPinClickHandler = function () {
 };
 
 var mapPinPressEnterHandler = function (evt) {
-  if (evt.keyCode === 13) {
+  if (evt.keyCode === ENTER_KEYCODE) {
     getSimilarAdverts();
     mapPinMain.removeEventListener('keydown', mapPinPressEnterHandler);
     mapPinMain.removeEventListener('mousedown', mapPinClickHandler);
@@ -236,5 +234,5 @@ form.addEventListener('invalid', function () {
   } else {
     form.setCustomValidity('');
   }
-});
+}, true);
 
