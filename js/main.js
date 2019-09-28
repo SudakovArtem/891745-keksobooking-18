@@ -21,11 +21,17 @@ var LOCATION_Y_MIN = 130;
 var LOCATION_Y_MAX = 630;
 var CURRENCY = '₽/ночь';
 var ENTER_KEYCODE = 13;
+var ESC_KEYCODE = 27;
 
 var form = document.querySelector('.ad-form');
 var mapPinMain = document.querySelector('.map__pin--main');
 var formElement = form.querySelectorAll('.ad-form__element');
 var address = document.querySelector('#address');
+var priceInput = form.querySelector('#price');
+var titleInput = form.querySelector('#title');
+var typeInput = form.querySelector('#type');
+var timeinInput = form.querySelector('#timein');
+var timeoutInput = form.querySelector('#timeout');
 var map = document.querySelector('.map');
 var similarMapPin = map.querySelector('.map__pins');
 var fragment = document.createDocumentFragment();
@@ -118,21 +124,34 @@ var removeCard = function () {
   }
 };
 
+var cardPopupEscPressHandler = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    removeCard();
+  }
+  document.removeEventListener('keydown', cardPopupEscPressHandler);
+};
+
 var renderPin = function (elem) {
   var mapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var pinElement = mapPinTemplate.cloneNode(true);
+
+  var mapCardPopupOpenHandler = function () {
+    fragment.appendChild(renderCard(elem));
+    removeCard();
+    similarMapPin.appendChild(fragment);
+  };
 
   pinElement.style.left = elem.location.x + 'px';
   pinElement.style.top = elem.location.y + 'px';
   pinElement.querySelector('img').src = elem.author.avatar;
   pinElement.querySelector('img').alt = elem.offer.title;
 
-  pinElement.addEventListener('click', function () {
+  pinElement.addEventListener('click', mapCardPopupOpenHandler);
 
-    fragment.appendChild(renderCard(elem));
-    removeCard();
-    similarMapPin.appendChild(fragment);
-
+  pinElement.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      mapCardPopupOpenHandler();
+    }
   });
 
   return pinElement;
@@ -146,6 +165,7 @@ var renderCard = function (elem) {
   var closeButton = cardElement.querySelector('.popup__close');
   closeButton.addEventListener('click', function () {
     removeCard();
+    document.removeEventListener('keydown', cardPopupEscPressHandler);
   });
 
   var insertPhotos = function (block) {
@@ -201,10 +221,12 @@ var renderCard = function (elem) {
   insertPhotos(photos);
   cardElement.querySelector('.popup__avatar').src = elem.author.avatar;
 
+  document.addEventListener('keydown', cardPopupEscPressHandler);
+
   return cardElement;
 };
 
-var getSimilarAdverts = function () {
+var makePageActive = function () {
   document.querySelector('.ad-form').classList.remove('ad-form--disabled');
 
   formElement.forEach(function (item) {
@@ -229,14 +251,14 @@ address.value = mapPinMain.style.left + ' ' + // расстояние до ос�
   mapPinMain.style.top; // расстояние до острого конца по вертикали
 
 var mapPinClickHandler = function () {
-  getSimilarAdverts();
+  makePageActive();
   mapPinMain.removeEventListener('mousedown', mapPinClickHandler);
   mapPinMain.removeEventListener('keydown', mapPinPressEnterHandler);
 };
 
 var mapPinPressEnterHandler = function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
-    getSimilarAdverts();
+    makePageActive();
     mapPinMain.removeEventListener('keydown', mapPinPressEnterHandler);
     mapPinMain.removeEventListener('mousedown', mapPinClickHandler);
   }
@@ -245,21 +267,59 @@ var mapPinPressEnterHandler = function (evt) {
 mapPinMain.addEventListener('mousedown', mapPinClickHandler);
 mapPinMain.addEventListener('keydown', mapPinPressEnterHandler);
 
-form.addEventListener('invalid', function () {
-  if (form.validity.tooShort) {
-    form.setCustomValidity('Имя должно состоять минимум из 2-х символов');
-  } else if (form.validity.tooLong) {
-    form.setCustomValidity('Имя не должно превышать 25-ти символов');
-  } else if (form.validity.valueMissing) {
-    form.setCustomValidity('Обязательное поле');
+priceInput.addEventListener('input', function () {
+  if (priceInput.validity.rangeOverflow) {
+    priceInput.setCustomValidity('Максимальное значение — 1 000 000');
+  } else if (priceInput.validity.badInput) {
+    priceInput.setCustomValidity('Неправильный формат значения');
+  } else if (priceInput.validity.valueMissing) {
+    priceInput.setCustomValidity('Обязательное поле');
   } else {
-    form.setCustomValidity('');
+    priceInput.setCustomValidity('');
   }
-}, true);
+});
 
-// ---------------------------3 задание-------------------------------------
+titleInput.addEventListener('input', function () {
+  if (titleInput.validity.tooShort) {
+    titleInput.setCustomValidity('Заголовок должен состоять минимум из 30 символов');
+  } else if (titleInput.validity.tooLong) {
+    titleInput.setCustomValidity('Заголовок не должен превышать 100 символов');
+  } else if (titleInput.validity.badInput) {
+    titleInput.setCustomValidity('Неправильный формат значения');
+  } else if (titleInput.validity.valueMissing) {
+    titleInput.setCustomValidity('Обязательное поле');
+  } else {
+    titleInput.setCustomValidity('');
+  }
+});
 
-var mapPins = document.querySelector('.map__pins');
-mapPins.addEventListener('click', function (evt) {
-  var target = evt.target;
-}, true);
+typeInput.addEventListener('change', function () {
+  if (typeInput.value === 'palace') {
+    priceInput.setAttribute('min', '10000');
+  }
+  if (typeInput.value === 'flat') {
+    priceInput.setAttribute('min', '1000');
+  }
+  if (typeInput.value === 'house') {
+    priceInput.setAttribute('min', '5000');
+  }
+  if (typeInput.value === 'bungalo') {
+    priceInput.setAttribute('min', '0');
+  }
+});
+
+timeinInput.addEventListener('change', function () {
+  for (var i = 0; i < timeinInput.children.length; i++) {
+    if (timeinInput.children[i].selected) {
+      timeoutInput.children[i].selected = true;
+    }
+  }
+});
+
+timeoutInput.addEventListener('change', function () {
+  for (var i = 0; i < timeoutInput.children.length; i++) {
+    if (timeoutInput.children[i].selected) {
+      timeinInput.children[i].selected = true;
+    }
+  }
+});
