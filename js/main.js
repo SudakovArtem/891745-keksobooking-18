@@ -26,6 +26,9 @@ var form = document.querySelector('.ad-form');
 var mapPinMain = document.querySelector('.map__pin--main');
 var formElement = form.querySelectorAll('.ad-form__element');
 var address = document.querySelector('#address');
+var map = document.querySelector('.map');
+var similarMapPin = map.querySelector('.map__pins');
+var fragment = document.createDocumentFragment();
 
 
 var getRandom = function (arr) {
@@ -106,6 +109,15 @@ var getMock = function () {
   return advertArray;
 };
 
+var offers = getMock();
+
+var removeCard = function () {
+  var cardElement = map.querySelector('.map__card');
+  if (cardElement) {
+    cardElement.remove();
+  }
+};
+
 var renderPin = function (elem) {
   var mapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var pinElement = mapPinTemplate.cloneNode(true);
@@ -115,6 +127,14 @@ var renderPin = function (elem) {
   pinElement.querySelector('img').src = elem.author.avatar;
   pinElement.querySelector('img').alt = elem.offer.title;
 
+  pinElement.addEventListener('click', function () {
+
+    fragment.appendChild(renderCard(elem));
+    removeCard();
+    similarMapPin.appendChild(fragment);
+
+  });
+
   return pinElement;
 };
 
@@ -123,6 +143,10 @@ var renderCard = function (elem) {
   var cardElement = mapCardTemplate.cloneNode(true);
   var photos = cardElement.querySelector('.popup__photos');
   var features = cardElement.querySelector('.popup__features');
+  var closeButton = cardElement.querySelector('.popup__close');
+  closeButton.addEventListener('click', function () {
+    removeCard();
+  });
 
   var insertPhotos = function (block) {
     block.innerHTML = '';
@@ -181,7 +205,6 @@ var renderCard = function (elem) {
 };
 
 var getSimilarAdverts = function () {
-  var map = document.querySelector('.map');
   document.querySelector('.ad-form').classList.remove('ad-form--disabled');
 
   formElement.forEach(function (item) {
@@ -189,11 +212,9 @@ var getSimilarAdverts = function () {
   });
 
   map.classList.remove('map--faded');
-  var similarMapPin = map.querySelector('.map__pins');
-  var fragment = document.createDocumentFragment();
-  var offers = getMock();
   for (var i = 0; i < offers.length; i++) {
     fragment.appendChild(renderPin(offers[i]));
+
   }
   fragment.appendChild(renderCard(offers[0]));
   similarMapPin.appendChild(fragment);
@@ -236,3 +257,9 @@ form.addEventListener('invalid', function () {
   }
 }, true);
 
+// ---------------------------3 задание-------------------------------------
+
+var mapPins = document.querySelector('.map__pins');
+mapPins.addEventListener('click', function (evt) {
+  var target = evt.target;
+}, true);
