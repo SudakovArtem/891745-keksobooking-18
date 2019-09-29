@@ -36,7 +36,6 @@ var map = document.querySelector('.map');
 var similarMapPin = map.querySelector('.map__pins');
 var fragment = document.createDocumentFragment();
 
-
 var getRandom = function (arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 };
