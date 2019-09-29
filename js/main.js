@@ -2,7 +2,31 @@
 
 var mapWidth = document.querySelector('.map__pins').offsetWidth;
 var ADVERT_LENGTH = 8;
-var TYPE = ['palace', 'flat', 'house', 'bungalo']; // строка с одним из четырёх фиксированных значений: palace, flat, house или bungalo
+var TYPE = [
+  {
+    'type': 'palace',
+    'textContent': 'Дворец',
+    'minCost': 10000
+
+  },
+  {
+    'type': 'flat',
+    'textContent': 'Квартира',
+    'minCost': 1000
+
+  },
+  {
+    'type': 'house',
+    'textContent': 'Дом',
+    'minCost': 5000
+
+  },
+  {
+    'type': 'bungalo',
+    'textContent': 'Бунгало',
+    'minCost': 0
+  }
+]; // строка с одним из четырёх фиксированных значений: palace, flat, house или bungalo
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner']; // массив строк случайной длины из ниже предложенных: 'wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner',
 var FEATURES_START = 0;
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg']; // массив строк случайной длины, содержащий адреса фотографий 'http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
@@ -96,7 +120,7 @@ var getMock = function () {
         'title': 'Заголовок объявления', // строка, заголовок предложения
         'address': 'Адрес предложения', // строка, адрес предложения. Для простоты пусть пока представляет собой запись вида '{{location.x}}, {{location.y}}', например, '600, 350'
         'price': getRandomInRange(COST_MIN, COST_MAX) + addZeros('', 3), // число, стоимость
-        'type': getRandom(TYPE), // строка с одним из четырёх фиксированных значений: palace, flat, house или bungalo
+        'type': getRandom(TYPE).type, // строка с одним из четырёх фиксированных значений: palace, flat, house или bungalo
         'rooms': getRandomInRange(NUMBER_OF_ROOMS_MIN, NUMBER_OF_ROOMS_MAX), // число, количество комнат
         'guests': getRandomInRange(NUMBER_OF_GUESTS_MIN, NUMBER_OF_GUESTS_MAX), // число, количество гостей, которое можно разместить
         'checkin': getRandomInRange(CHECK_IN_OUT_MIN, CHECK_IN_OUT_MAX) + ':' + addZeros('', 2), // строка с одним из трёх фиксированных значений: 12:00, 13:00 или 14:00,
@@ -183,21 +207,11 @@ var renderCard = function (elem) {
   };
 
   var insertType = function () {
-
     var popupType = cardElement.querySelector('.popup__type');
-    switch (elem.offer.type) {
-      case 'palace':
-        popupType.textContent = 'Дворец';
-        break;
-      case 'flat':
-        popupType.textContent = 'Квартира';
-        break;
-      case 'house':
-        popupType.textContent = 'Дом';
-        break;
-      case 'bungalo':
-        popupType.textContent = 'Бунгало';
-        break;
+    for (var i = 0; i < TYPE.length; i++) {
+      if (elem.offer.type === TYPE[i].type) {
+        popupType.textContent = TYPE[i].textContent;
+      }
     }
   };
 
@@ -293,33 +307,32 @@ titleInput.addEventListener('input', function () {
   }
 });
 
-typeInput.addEventListener('change', function () {
-  if (typeInput.value === 'palace') {
-    priceInput.setAttribute('min', '10000');
+var typeInputHandler = function () {
+  for (var i = 0; i < TYPE.length; i++) {
+    if (typeInput.value === TYPE[i].type) {
+      priceInput.setAttribute('min', TYPE[i].minCost);
+    }
   }
-  if (typeInput.value === 'flat') {
-    priceInput.setAttribute('min', '1000');
-  }
-  if (typeInput.value === 'house') {
-    priceInput.setAttribute('min', '5000');
-  }
-  if (typeInput.value === 'bungalo') {
-    priceInput.setAttribute('min', '0');
-  }
-});
+};
 
-timeinInput.addEventListener('change', function () {
+var timeinInputHandler = function () {
   for (var i = 0; i < timeinInput.children.length; i++) {
     if (timeinInput.children[i].selected) {
       timeoutInput.children[i].selected = true;
     }
   }
-});
+};
 
-timeoutInput.addEventListener('change', function () {
+var timeoutInputHandler = function () {
   for (var i = 0; i < timeoutInput.children.length; i++) {
     if (timeoutInput.children[i].selected) {
       timeinInput.children[i].selected = true;
     }
   }
-});
+};
+
+typeInput.addEventListener('change', typeInputHandler);
+
+timeinInput.addEventListener('change', timeinInputHandler);
+
+timeoutInput.addEventListener('change', timeoutInputHandler);
