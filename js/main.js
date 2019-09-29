@@ -20,6 +20,15 @@ var LOCATION_X_MAX = mapWidth;
 var LOCATION_Y_MIN = 130;
 var LOCATION_Y_MAX = 630;
 var CURRENCY = '₽/ночь';
+var ENTER_KEYCODE = 13;
+
+var form = document.querySelector('.ad-form');
+var mapPinMain = document.querySelector('.map__pin--main');
+var formElement = form.querySelectorAll('.ad-form__element');
+var address = document.querySelector('#address');
+var priceInput = form.querySelector('#price');
+var titleInput = form.querySelector('#title');
+
 
 var getRandom = function (arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -173,8 +182,14 @@ var renderCard = function (elem) {
   return cardElement;
 };
 
-var getSimilarAdverts = function () {
+var makePageActive = function () {
   var map = document.querySelector('.map');
+  document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+
+  formElement.forEach(function (item) {
+    item.removeAttribute('disabled');
+  });
+
   map.classList.remove('map--faded');
   var similarMapPin = map.querySelector('.map__pins');
   var fragment = document.createDocumentFragment();
@@ -187,4 +202,52 @@ var getSimilarAdverts = function () {
   return offers;
 };
 
-getSimilarAdverts();
+formElement.forEach(function (item) {
+  item.setAttribute('disabled', 'disabled');
+});
+
+address.value = mapPinMain.style.left + ' ' + // расстояние до острого конца по горизонтали
+  mapPinMain.style.top; // расстояние до острого конца по вертикали
+
+var mapPinClickHandler = function () {
+  makePageActive();
+  mapPinMain.removeEventListener('mousedown', mapPinClickHandler);
+  mapPinMain.removeEventListener('keydown', mapPinPressEnterHandler);
+};
+
+var mapPinPressEnterHandler = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    makePageActive();
+    mapPinMain.removeEventListener('keydown', mapPinPressEnterHandler);
+    mapPinMain.removeEventListener('mousedown', mapPinClickHandler);
+  }
+};
+
+mapPinMain.addEventListener('mousedown', mapPinClickHandler);
+mapPinMain.addEventListener('keydown', mapPinPressEnterHandler);
+
+priceInput.addEventListener('input', function () {
+  if (priceInput.validity.rangeOverflow) {
+    priceInput.setCustomValidity('Максимальное значение — 1 000 000');
+  } else if (priceInput.validity.badInput) {
+    priceInput.setCustomValidity('Неправильный формат значения');
+  } else if (priceInput.validity.valueMissing) {
+    priceInput.setCustomValidity('Обязательное поле');
+  } else {
+    priceInput.setCustomValidity('');
+  }
+});
+
+titleInput.addEventListener('input', function () {
+  if (titleInput.validity.tooShort) {
+    titleInput.setCustomValidity('Заголовок должен состоять минимум из 30 символов');
+  } else if (titleInput.validity.tooLong) {
+    titleInput.setCustomValidity('Заголовок не должен превышать 100 символов');
+  } else if (titleInput.validity.badInput) {
+    titleInput.setCustomValidity('Неправильный формат значения');
+  } else if (titleInput.validity.valueMissing) {
+    titleInput.setCustomValidity('Обязательное поле');
+  } else {
+    titleInput.setCustomValidity('');
+  }
+});
