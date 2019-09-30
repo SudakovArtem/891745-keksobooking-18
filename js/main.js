@@ -26,10 +26,10 @@ var TYPE = [
     'textContent': 'Бунгало',
     'minCost': 0
   }
-]; // строка с одним из четырёх фиксированных значений: palace, flat, house или bungalo
-var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner']; // массив строк случайной длины из ниже предложенных: 'wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner',
+];
+var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var FEATURES_START = 0;
-var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg']; // массив строк случайной длины, содержащий адреса фотографий 'http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
+var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var PHOTOS_START = 0;
 var COST_MIN = 1;
 var COST_MAX = 50;
@@ -56,6 +56,8 @@ var titleInput = form.querySelector('#title');
 var typeInput = form.querySelector('#type');
 var timeinInput = form.querySelector('#timein');
 var timeoutInput = form.querySelector('#timeout');
+var roomNumberInput = form.querySelector('#room_number');
+var capacityInput = form.querySelector('#capacity');
 var map = document.querySelector('.map');
 var similarMapPin = map.querySelector('.map__pins');
 var fragment = document.createDocumentFragment();
@@ -210,6 +212,7 @@ var renderCard = function (elem) {
     for (var i = 0; i < TYPE.length; i++) {
       if (elem.offer.type === TYPE[i].type) {
         popupType.textContent = TYPE[i].textContent;
+        break;
       }
     }
   };
@@ -310,6 +313,7 @@ var typeInputHandler = function () {
   for (var i = 0; i < TYPE.length; i++) {
     if (typeInput.value === TYPE[i].type) {
       priceInput.setAttribute('min', TYPE[i].minCost);
+      break;
     }
   }
 };
@@ -330,8 +334,25 @@ var timeoutInputHandler = function () {
   }
 };
 
+var roomNumberInputHandler = function () {
+  for (var i = 0; i < capacityInput.children.length; i++) {
+    if (roomNumberInput.value < capacityInput.children[i].value && !capacityInput.children[i].hasAttribute('disabled')) {
+      capacityInput.children[i].setAttribute('disabled', 'disabled');
+    } else if (roomNumberInput.value >= capacityInput.children[i].value && capacityInput.children[i].hasAttribute('disabled')) {
+      capacityInput.children[i].removeAttribute('disabled');
+    }
+  }
+  if (roomNumberInput.value === '0') {
+    capacityInput.querySelector('option[selected]').removeAttribute('selected');
+    capacityInput.querySelector('option[value="0"]').setAttribute('selected', 'selected');
+  }
+};
+
 typeInput.addEventListener('change', typeInputHandler);
 
 timeinInput.addEventListener('change', timeinInputHandler);
 
 timeoutInput.addEventListener('change', timeoutInputHandler);
+
+roomNumberInput.addEventListener('change', roomNumberInputHandler);
+
