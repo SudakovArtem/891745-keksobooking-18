@@ -1,7 +1,9 @@
 'use strict';
 
 (function () {
-  window.fragment = document.createDocumentFragment();
+  var getFragment = function () {
+    return document.createDocumentFragment();
+  };
 
   window.getRandom = function (arr) {
     return arr[Math.floor(Math.random() * arr.length)];
@@ -40,5 +42,9 @@
       s = '0' + s;
     }
     return s;
+  };
+
+  window.util = {
+    getFragment: getFragment
   };
 })();

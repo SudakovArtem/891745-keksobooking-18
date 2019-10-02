@@ -1,22 +1,19 @@
 'use strict';
 
 (function () {
-  window.form = document.querySelector('.ad-form');
-  var priceInput = window.form.querySelector('#price');
-  var titleInput = window.form.querySelector('#title');
-  var typeInput = window.form.querySelector('#type');
-  var timeinInput = window.form.querySelector('#timein');
-  var timeoutInput = window.form.querySelector('#timeout');
-  var roomNumberInput = window.form.querySelector('#room_number');
-  var capacityInput = window.form.querySelector('#capacity');
+  var form = document.querySelector('.ad-form');
+  var priceInput = form.querySelector('#price');
+  var titleInput = form.querySelector('#title');
+  var typeInput = form.querySelector('#type');
+  var timeinInput = form.querySelector('#timein');
+  var timeoutInput = form.querySelector('#timeout');
+  var roomNumberInput = form.querySelector('#room_number');
+  var capacityInput = form.querySelector('#capacity');
   var address = document.querySelector('#address');
 
-  window.form = document.querySelector('.ad-form');
+  address.value = window.map.getMapPinCoordinate();
 
-  address.value = window.mapPinMain.style.left + ' ' + // расстояние до острого конца по горизонтали
-    window.mapPinMain.style.top; // расстояние до острого конца по вертикали
-
-  priceInput.addEventListener('input', function () {
+  var priceInputHandler = function () {
     if (priceInput.validity.rangeOverflow) {
       priceInput.setCustomValidity('Максимальное значение — 1 000 000');
     } else if (priceInput.validity.badInput) {
@@ -26,9 +23,9 @@
     } else {
       priceInput.setCustomValidity('');
     }
-  });
+  };
 
-  titleInput.addEventListener('input', function () {
+  var titleInputHandler = function () {
     if (titleInput.validity.tooShort) {
       titleInput.setCustomValidity('Заголовок должен состоять минимум из 30 символов');
     } else if (titleInput.validity.tooLong) {
@@ -40,12 +37,12 @@
     } else {
       titleInput.setCustomValidity('');
     }
-  });
+  };
 
   var typeInputHandler = function () {
-    for (var i = 0; i < window.TYPE.length; i++) {
-      if (typeInput.value === window.TYPE[i].type) {
-        priceInput.setAttribute('min', window.TYPE[i].minCost);
+    for (var i = 0; i < window.data.TYPE.length; i++) {
+      if (typeInput.value === window.data.TYPE[i].type) {
+        priceInput.setAttribute('min', window.data.TYPE[i].minCost);
         break;
       }
     }
@@ -88,4 +85,8 @@
   timeoutInput.addEventListener('change', timeoutInputHandler);
 
   roomNumberInput.addEventListener('change', roomNumberInputHandler);
+
+  priceInput.addEventListener('input', priceInputHandler);
+
+  titleInput.addEventListener('input', titleInputHandler);
 })();

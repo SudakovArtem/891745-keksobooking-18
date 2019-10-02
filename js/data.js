@@ -3,31 +3,34 @@
 (function () {
   var mapWidth = document.querySelector('.map__pins').offsetWidth;
   var ADVERT_LENGTH = 8;
-  window.TYPE = [
-    {
-      'type': 'palace',
-      'textContent': 'Дворец',
-      'minCost': 10000
 
-    },
-    {
-      'type': 'flat',
-      'textContent': 'Квартира',
-      'minCost': 1000
+  var getTypes = function () {
+    return [
+      {
+        'type': 'palace',
+        'textContent': 'Дворец',
+        'minCost': 10000
 
-    },
-    {
-      'type': 'house',
-      'textContent': 'Дом',
-      'minCost': 5000
+      },
+      {
+        'type': 'flat',
+        'textContent': 'Квартира',
+        'minCost': 1000
 
-    },
-    {
-      'type': 'bungalo',
-      'textContent': 'Бунгало',
-      'minCost': 0
-    }
-  ];
+      },
+      {
+        'type': 'house',
+        'textContent': 'Дом',
+        'minCost': 5000
+
+      },
+      {
+        'type': 'bungalo',
+        'textContent': 'Бунгало',
+        'minCost': 0
+      }
+    ];
+  };
   var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
   var FEATURES_START = 0;
   var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
@@ -45,7 +48,7 @@
   var LOCATION_Y_MIN = 130;
   var LOCATION_Y_MAX = 630;
 
-  window.getMock = function () {
+  var getMock = function () {
     var counter = -1;
     var advertArray = [];
     var avatars = window.generateMixedArray(ADVERT_LENGTH);
@@ -65,7 +68,7 @@
           'title': 'Заголовок объявления', // строка, заголовок предложения
           'address': 'Адрес предложения', // строка, адрес предложения. Для простоты пусть пока представляет собой запись вида '{{location.x}}, {{location.y}}', например, '600, 350'
           'price': window.getRandomInRange(COST_MIN, COST_MAX) + window.addZeros('', 3), // число, стоимость
-          'type': window.getRandom(window.TYPE).type, // строка с одним из четырёх фиксированных значений: palace, flat, house или bungalo
+          'type': window.getRandom(getTypes()).type, // строка с одним из четырёх фиксированных значений: palace, flat, house или bungalo
           'rooms': window.getRandomInRange(NUMBER_OF_ROOMS_MIN, NUMBER_OF_ROOMS_MAX), // число, количество комнат
           'guests': window.getRandomInRange(NUMBER_OF_GUESTS_MIN, NUMBER_OF_GUESTS_MAX), // число, количество гостей, которое можно разместить
           'checkin': window.getRandomInRange(CHECK_IN_OUT_MIN, CHECK_IN_OUT_MAX) + ':' + window.addZeros('', 2), // строка с одним из трёх фиксированных значений: 12:00, 13:00 или 14:00,
@@ -83,4 +86,10 @@
     }
     return advertArray;
   };
+
+  window.data = {
+    TYPE: getTypes(),
+    offers: getMock()
+  };
+
 })();
