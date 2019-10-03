@@ -9,7 +9,7 @@
   });
 
 
-  window.makePageActive = function () {
+  var makePageActive = function () {
     document.querySelector('.ad-form').classList.remove('ad-form--disabled');
 
     formElement.forEach(function (item) {
@@ -19,10 +19,13 @@
     window.map.getMapElement().classList.remove('map--faded');
     for (var i = 0; i < offers.length; i++) {
       fragment.appendChild(window.map.renderPin(offers[i]));
-
     }
     fragment.appendChild(window.map.renderCard(offers[0]));
     window.map.getSimilarMapPinElement().appendChild(fragment);
     return offers;
+  };
+
+  window.page = {
+    makePageActive: makePageActive
   };
 })();

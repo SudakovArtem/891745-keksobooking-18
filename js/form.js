@@ -11,7 +11,10 @@
   var capacityInput = form.querySelector('#capacity');
   var address = document.querySelector('#address');
 
-  address.value = window.map.getMapPinCoordinate();
+  var getAddressValue = function (obj) {
+    address.value = obj.x + 'px' + ' ' + // расстояние до острого конца по горизонтали
+      obj.y + 'px'; // расстояние до острого конца по вертикали
+  };
 
   var priceInputHandler = function () {
     if (priceInput.validity.rangeOverflow) {
@@ -89,4 +92,8 @@
   priceInput.addEventListener('input', priceInputHandler);
 
   titleInput.addEventListener('input', titleInputHandler);
+
+  window.form = {
+    getAddressValue: getAddressValue
+  };
 })();
