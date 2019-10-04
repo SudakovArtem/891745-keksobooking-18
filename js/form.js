@@ -12,8 +12,7 @@
   var address = document.querySelector('#address');
 
   var getAddressValue = function (obj) {
-    address.value = obj.x + 'px' + ' ' + // расстояние до острого конца по горизонтали
-      obj.y + 'px'; // расстояние до острого конца по вертикали
+    address.value = Math.floor(obj.x) + ' ' + Math.floor(obj.y);
   };
 
   var priceInputHandler = function () {

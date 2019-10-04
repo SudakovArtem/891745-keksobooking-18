@@ -49,14 +49,12 @@
         y: moveEvt.clientY,
       };
 
-      if (mapPinMain.offsetLeft >= 0 && mapPinMain.offsetLeft <= (map.offsetWidth - mapPinMain.offsetWidth)) {
+      if ((startCoords.x - mapPinMain.offsetWidth / 2) >= (map.getBoundingClientRect().left) && (startCoords.x + mapPinMain.offsetWidth / 2) <= map.getBoundingClientRect().right) {
         mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
         addressCoords.x = (mapPinMain.offsetLeft - shift.x) + (mapPinMain.offsetWidth / 2);
-      } else {
-        mapPinMain.style.left = mapPinMain.style.left + 1;
       }
 
-      if (mapPinMain.offsetTop >= 0 && mapPinMain.offsetTop <= (map.offsetHeight - mapPinMain.offsetHeight)) {
+      if ((startCoords.y + mapPinMain.offsetHeight) <= map.getBoundingClientRect().bottom && (startCoords.y - mapPinMain.offsetHeight / 2) >= map.getBoundingClientRect().top) {
         mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
         addressCoords.y = mapPinMain.offsetLeft - shift.x + mapPinMain.offsetHeight;
       }
