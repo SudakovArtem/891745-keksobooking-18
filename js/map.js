@@ -1,13 +1,15 @@
 'use strict';
 
 (function () {
-  var ENTER_KEYCODE = 13;
   var ESC_KEYCODE = 27;
   var CURRENCY = '₽/ночь';
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
   var cardElement = mapCardTemplate.cloneNode(true);
 
+  var getEnterKeycode = function () {
+    return 13;
+  };
   var getMapElement = function () {
     return document.querySelector('.map');
   };
@@ -17,7 +19,7 @@
   };
 
   var pageActiveHandler = function () {
-    window.page.makePageActive();
+    window.data.load(window.page.successHandler, window.page.errorHandler);
     mapPinMain.removeEventListener('mousedown', pageActiveHandler);
     mapPinMain.removeEventListener('keydown', mapPinPressEnterHandler);
   };
@@ -71,8 +73,8 @@
   };
 
   var mapPinPressEnterHandler = function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
-      window.makePageActive();
+    if (evt.keyCode === getEnterKeycode()) {
+      window.data.load(window.page.successHandler, window.page.errorHandler);
       mapPinMain.removeEventListener('keydown', mapPinPressEnterHandler);
       mapPinMain.removeEventListener('mousedown', pageActiveHandler);
     }
@@ -98,15 +100,19 @@
 
   var insertPhotos = function (elem, block) {
     block.innerHTML = '';
-    for (var i = 0; i < elem.offer.photos.length; i++) {
-      block.insertAdjacentHTML('afterbegin', '<img src="' + elem.offer.photos[i] + '" class="popup__photo" width="45" height="40" alt="Фотография жилья">');
+    if (elem.offer.photos.length !== 0) {
+      for (var i = 0; i < elem.offer.photos.length; i++) {
+        block.insertAdjacentHTML('afterbegin', '<img src="' + elem.offer.photos[i] + '" class="popup__photo" width="45" height="40" alt="Фотография жилья">');
+      }
     }
   };
 
   var insertFeatures = function (elem, block) {
     block.innerHTML = '';
-    for (var i = 0; i < elem.offer.features.length; i++) {
-      block.insertAdjacentHTML('afterbegin', '<li class="popup__feature popup__feature--' + elem.offer.features[i] + '"></li>');
+    if (elem.offer.features.length !== 0) {
+      for (var i = 0; i < elem.offer.features.length; i++) {
+        block.insertAdjacentHTML('afterbegin', '<li class="popup__feature popup__feature--' + elem.offer.features[i] + '"></li>');
+      }
     }
   };
 
@@ -125,7 +131,7 @@
   };
 
   var getTimeStr = function (checkinTime, checkoutTime) {
-    return checkinTime + ' комнаты для ' + checkoutTime + ' гостей';
+    return 'Заезд после ' + checkinTime + ', выезд до ' + checkoutTime;
   };
 
 
@@ -148,7 +154,7 @@
     pinElement.addEventListener('click', mapCardPopupOpenHandler);
 
     pinElement.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === ENTER_KEYCODE) {
+      if (evt.keyCode === getEnterKeycode()) {
         mapCardPopupOpenHandler();
       }
     });
@@ -165,7 +171,6 @@
       document.removeEventListener('keydown', cardPopupEscPressHandler);
     });
 
-
     cardElement.querySelector('.popup__title').textContent = elem.offer.title;
     cardElement.querySelector('.popup__text--address').textContent = elem.offer.address;
     cardElement.querySelector('.popup__text--price').textContent = elem.offer.price + CURRENCY;
@@ -174,7 +179,6 @@
     cardElement.querySelector('.popup__text--time').textContent = getTimeStr(elem.offer.checkin, elem.offer.checkout);
     insertFeatures(elem, features);
     cardElement.querySelector('.popup__description').textContent = elem.offer.description;
-    cardElement.querySelector('.popup__photos > img').src = elem.offer.photos[0];
     insertPhotos(elem, photos);
     cardElement.querySelector('.popup__avatar').src = elem.author.avatar;
 
@@ -187,6 +191,7 @@
     getMapElement: getMapElement,
     getSimilarMapPinElement: getSimilarMapPinElement,
     renderCard: renderCard,
-    renderPin: renderPin
+    renderPin: renderPin,
+    getEnterKeycode: getEnterKeycode
   };
 })();
