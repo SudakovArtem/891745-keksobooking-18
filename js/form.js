@@ -11,7 +11,9 @@
   var capacityInput = form.querySelector('#capacity');
   var address = document.querySelector('#address');
 
-  address.value = window.map.getMapPinCoordinate();
+  var getAddressValue = function (obj) {
+    address.value = Math.floor(obj.x) + ' ' + Math.floor(obj.y);
+  };
 
   var priceInputHandler = function () {
     if (priceInput.validity.rangeOverflow) {
@@ -89,4 +91,8 @@
   priceInput.addEventListener('input', priceInputHandler);
 
   titleInput.addEventListener('input', titleInputHandler);
+
+  window.form = {
+    getAddressValue: getAddressValue
+  };
 })();

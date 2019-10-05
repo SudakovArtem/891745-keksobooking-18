@@ -8,7 +8,6 @@
   var mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
   var cardElement = mapCardTemplate.cloneNode(true);
 
-
   var getMapElement = function () {
     return document.querySelector('.map');
   };
@@ -17,26 +16,70 @@
     return document.querySelector('.map__pins');
   };
 
-  var getMapPinCoordinate = function () {
-    return mapPinMain.style.left + ' ' + // расстояние до острого конца по горизонтали
-      mapPinMain.style.top; // расстояние до острого конца по вертикали
+  var pageActiveHandler = function () {
+    window.page.makePageActive();
+    mapPinMain.removeEventListener('mousedown', pageActiveHandler);
+    mapPinMain.removeEventListener('keydown', mapPinPressEnterHandler);
   };
 
-  var mapPinClickHandler = function () {
-    window.makePageActive();
-    mapPinMain.removeEventListener('mousedown', mapPinClickHandler);
-    mapPinMain.removeEventListener('keydown', mapPinPressEnterHandler);
+  var mapPinMouseDownHandler = function (evt) {
+    evt.preventDefault();
+    var map = getMapElement();
+
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY,
+    };
+
+    var addressCoords = {
+      x: evt.clientX,
+      y: evt.clientY,
+    };
+
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY,
+      };
+
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY,
+      };
+
+      if ((startCoords.x - mapPinMain.offsetWidth / 2) >= (map.getBoundingClientRect().left) && (startCoords.x + mapPinMain.offsetWidth / 2) <= map.getBoundingClientRect().right) {
+        mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
+        addressCoords.x = (mapPinMain.offsetLeft - shift.x) + (mapPinMain.offsetWidth / 2);
+      }
+
+      if ((startCoords.y + mapPinMain.offsetHeight) <= map.getBoundingClientRect().bottom && (startCoords.y - mapPinMain.offsetHeight / 2) >= map.getBoundingClientRect().top) {
+        mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
+        addressCoords.y = mapPinMain.offsetLeft - shift.x + mapPinMain.offsetHeight;
+      }
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+      window.form.getAddressValue(addressCoords);
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   };
 
   var mapPinPressEnterHandler = function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
       window.makePageActive();
       mapPinMain.removeEventListener('keydown', mapPinPressEnterHandler);
-      mapPinMain.removeEventListener('mousedown', mapPinClickHandler);
+      mapPinMain.removeEventListener('mousedown', pageActiveHandler);
     }
   };
 
-  mapPinMain.addEventListener('mousedown', mapPinClickHandler);
+  mapPinMain.addEventListener('mousedown', mapPinMouseDownHandler);
+  mapPinMain.addEventListener('mousedown', pageActiveHandler);
   mapPinMain.addEventListener('keydown', mapPinPressEnterHandler);
 
   var removeCard = function () {
@@ -142,7 +185,6 @@
 
   window.map = {
     getMapElement: getMapElement,
-    getMapPinCoordinate: getMapPinCoordinate,
     getSimilarMapPinElement: getSimilarMapPinElement,
     renderCard: renderCard,
     renderPin: renderPin
