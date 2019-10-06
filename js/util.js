@@ -1,6 +1,10 @@
 'use strict';
 
 (function () {
+  var getEnterKeycode = function () {
+    return 13;
+  };
+
   var getFragment = function () {
     return document.createDocumentFragment();
   };
@@ -45,6 +49,7 @@
   };
 
   window.util = {
-    getFragment: getFragment
+    getFragment: getFragment,
+    getEnterKeycode: getEnterKeycode
   };
 })();

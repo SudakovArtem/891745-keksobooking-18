@@ -1,8 +1,8 @@
 'use strict';
 
 (function () {
-  var ENTER_KEYCODE = 13;
   var ESC_KEYCODE = 27;
+  var ENTER_KEYCODE = 13;
   var CURRENCY = '₽/ночь';
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
@@ -17,7 +17,7 @@
   };
 
   var pageActiveHandler = function () {
-    window.page.makePageActive();
+    window.data.load(window.page.successHandler, window.page.errorHandler);
     mapPinMain.removeEventListener('mousedown', pageActiveHandler);
     mapPinMain.removeEventListener('keydown', mapPinPressEnterHandler);
   };
@@ -72,7 +72,7 @@
 
   var mapPinPressEnterHandler = function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
-      window.makePageActive();
+      window.data.load(window.page.successHandler, window.page.errorHandler);
       mapPinMain.removeEventListener('keydown', mapPinPressEnterHandler);
       mapPinMain.removeEventListener('mousedown', pageActiveHandler);
     }
@@ -125,7 +125,7 @@
   };
 
   var getTimeStr = function (checkinTime, checkoutTime) {
-    return checkinTime + ' комнаты для ' + checkoutTime + ' гостей';
+    return 'Заезд после ' + checkinTime + ', выезд до ' + checkoutTime;
   };
 
 
@@ -165,7 +165,6 @@
       document.removeEventListener('keydown', cardPopupEscPressHandler);
     });
 
-
     cardElement.querySelector('.popup__title').textContent = elem.offer.title;
     cardElement.querySelector('.popup__text--address').textContent = elem.offer.address;
     cardElement.querySelector('.popup__text--price').textContent = elem.offer.price + CURRENCY;
@@ -174,7 +173,6 @@
     cardElement.querySelector('.popup__text--time').textContent = getTimeStr(elem.offer.checkin, elem.offer.checkout);
     insertFeatures(elem, features);
     cardElement.querySelector('.popup__description').textContent = elem.offer.description;
-    cardElement.querySelector('.popup__photos > img').src = elem.offer.photos[0];
     insertPhotos(elem, photos);
     cardElement.querySelector('.popup__avatar').src = elem.author.avatar;
 
@@ -187,6 +185,6 @@
     getMapElement: getMapElement,
     getSimilarMapPinElement: getSimilarMapPinElement,
     renderCard: renderCard,
-    renderPin: renderPin
+    renderPin: renderPin,
   };
 })();
