@@ -2,10 +2,23 @@
 
 (function () {
   var formElement = document.querySelectorAll('.ad-form__element');
+  var main = document.querySelector('main');
   var fragment = window.util.getFragment();
   formElement.forEach(function (item) {
     item.setAttribute('disabled', 'disabled');
   });
+
+  var removeErrorElement = function () {
+    var errorElem = main.querySelector('.error');
+    if (errorElem) {
+      errorElem.remove();
+    }
+  };
+
+  var errorButtonClickHandler = function () {
+    window.data.load(successHandler, errorHandler);
+    removeErrorElement();
+  };
 
   var successHandler = function (offers) {
     document.querySelector('.ad-form').classList.remove('ad-form--disabled');
@@ -26,24 +39,11 @@
     var errorTemplate = document.querySelector('#error').content.querySelector('.error');
     var errorElement = errorTemplate.cloneNode(true);
     var errorButton = errorElement.querySelector('.error__button');
-    var main = document.querySelector('main');
-
-    var removeErrorElement = function () {
-      var errorElem = main.querySelector('.error');
-      if (errorElem) {
-        errorElem.remove();
-      }
-    };
-
-    var errorButtonClickHandler = function () {
-      window.data.load(successHandler, errorHandler);
-      removeErrorElement();
-    };
 
     errorButton.addEventListener('click', errorButtonClickHandler);
 
     errorButton.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.map.getEnterKeycode()) {
+      if (evt.keyCode === window.util.getEnterKeycode()) {
         errorButtonClickHandler();
       }
     });

@@ -37,7 +37,7 @@
     return new XMLHttpRequest();
   };
 
-  var getXhrListener = function (xhr, onLoad, onError) {
+  var addXhrListener = function (xhr, onLoad, onError) {
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
@@ -60,7 +60,7 @@
   var load = function (onLoad, onError) {
     var xhr = getXhr();
     var URL = GET_URL;
-    getXhrListener(xhr, onLoad, onError);
+    addXhrListener(xhr, onLoad, onError);
     xhr.open('GET', URL);
     xhr.send();
   };
