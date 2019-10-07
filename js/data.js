@@ -4,6 +4,7 @@
   var TIMEOUT_VALUE = 10000;
   var OK_STATUS = 200;
   var GET_URL = 'https://js.dump.academy/keksobooking/data';
+  var POST_URL = 'https://js.dump.academy/keksobooking';
 
   var getTypes = function () {
     return [
@@ -65,9 +66,19 @@
     xhr.send();
   };
 
+  var upload = function (data, onLoad, onError) {
+    var xhr = getXhr();
+    var URL = POST_URL;
+
+    addXhrListener(xhr, onLoad, onError);
+    xhr.open('POST', URL);
+    xhr.send(data);
+  };
+
 
   window.data = {
     TYPE: getTypes(),
     load: load,
+    upload: upload
   };
 })();

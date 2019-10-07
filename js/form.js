@@ -11,6 +11,10 @@
   var capacityInput = form.querySelector('#capacity');
   var address = document.querySelector('#address');
 
+  var getFormElement = function () {
+    return form;
+  };
+
   var getAddressValue = function (obj) {
     address.value = Math.floor(obj.x) + ' ' + Math.floor(obj.y);
   };
@@ -80,6 +84,11 @@
     }
   };
 
+  var formSubmitHandler = function (evt) {
+    window.data.upload(new FormData(form), window.page.formSuccessHandler, window.page.formErrorHandler);
+    evt.preventDefault();
+  };
+
   typeInput.addEventListener('change', typeInputHandler);
 
   timeinInput.addEventListener('change', timeinInputHandler);
@@ -92,7 +101,10 @@
 
   titleInput.addEventListener('input', titleInputHandler);
 
+  form.addEventListener('submit', formSubmitHandler);
+
   window.form = {
-    getAddressValue: getAddressValue
+    getAddressValue: getAddressValue,
+    getFormElement: getFormElement
   };
 })();

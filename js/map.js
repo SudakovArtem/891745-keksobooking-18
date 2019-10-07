@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  var ESC_KEYCODE = 27;
-  var ENTER_KEYCODE = 13;
   var CURRENCY = '₽/ночь';
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
@@ -10,6 +8,10 @@
 
   var getMapElement = function () {
     return document.querySelector('.map');
+  };
+
+  var getMapPinMainElement = function () {
+    return mapPinMain;
   };
 
   var getSimilarMapPinElement = function () {
@@ -71,7 +73,7 @@
   };
 
   var mapPinPressEnterHandler = function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
+    if (evt.keyCode === window.util.getEnterKeyCode()) {
       window.data.load(window.page.successHandler, window.page.errorHandler);
       mapPinMain.removeEventListener('keydown', mapPinPressEnterHandler);
       mapPinMain.removeEventListener('mousedown', pageActiveHandler);
@@ -90,7 +92,7 @@
   };
 
   var cardPopupEscPressHandler = function (evt) {
-    if (evt.keyCode === ESC_KEYCODE) {
+    if (evt.keyCode === window.util.getEscKeyCode()) {
       removeCard();
     }
     document.removeEventListener('keydown', cardPopupEscPressHandler);
@@ -148,7 +150,7 @@
     pinElement.addEventListener('click', mapCardPopupOpenHandler);
 
     pinElement.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === ENTER_KEYCODE) {
+      if (evt.keyCode === window.util.getEnterKeyCode()) {
         mapCardPopupOpenHandler();
       }
     });
@@ -186,5 +188,10 @@
     getSimilarMapPinElement: getSimilarMapPinElement,
     renderCard: renderCard,
     renderPin: renderPin,
+    removeCard: removeCard,
+    mapPinMouseDownHandler: mapPinMouseDownHandler,
+    pageActiveHandler: pageActiveHandler,
+    mapPinPressEnterHandler: mapPinPressEnterHandler,
+    getMapPinMainElement: getMapPinMainElement
   };
 })();
