@@ -2,12 +2,13 @@
 
 (function () {
   var CURRENCY = '₽/ночь';
-  var mapPinMain = document.querySelector('.map__pin--main');
+  var map = document.querySelector('.map');
+  var mapPinMain = map.querySelector('.map__pin--main');
   var mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
   var cardElement = mapCardTemplate.cloneNode(true);
 
   var getMapElement = function () {
-    return document.querySelector('.map');
+    return map;
   };
 
   var getMapPinMainElement = function () {
@@ -26,7 +27,6 @@
 
   var mapPinMouseDownHandler = function (evt) {
     evt.preventDefault();
-    var map = getMapElement();
 
     var startCoords = {
       x: evt.clientX,
@@ -85,7 +85,7 @@
   mapPinMain.addEventListener('keydown', mapPinPressEnterHandler);
 
   var removeCard = function () {
-    var cardElem = getMapElement().querySelector('.map__card');
+    var cardElem = map.querySelector('.map__card');
     if (cardElem) {
       cardElem.remove();
     }
@@ -135,7 +135,6 @@
     var mapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
     var pinElement = mapPinTemplate.cloneNode(true);
     var fragment = window.util.getFragment();
-
     var mapCardPopupOpenHandler = function () {
       fragment.appendChild(renderCard(elem));
       removeCard();

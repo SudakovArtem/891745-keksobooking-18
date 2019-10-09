@@ -9,10 +9,15 @@
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
   var errorElement = errorTemplate.cloneNode(true);
   var errorButton = errorElement.querySelector('.error__button');
+  var takeNumber;
 
   adFormElement.forEach(function (item) {
     item.setAttribute('disabled', 'disabled');
   });
+
+  var getTakeNumber = function () {
+    return takeNumber;
+  };
 
   var removeErrorElement = function () {
     var errorElem = main.querySelector('.error');
@@ -46,6 +51,7 @@
   };
 
   var successHandler = function (offers) {
+    window.pins = offers;
     document.querySelector('.ad-form').classList.remove('ad-form--disabled');
 
     adFormElement.forEach(function (item) {
@@ -53,7 +59,8 @@
     });
 
     window.map.getMapElement().classList.remove('map--faded');
-    for (var i = 0; i < offers.length; i++) {
+    takeNumber = offers.length > 5 ? 5 : offers.length;
+    for (var i = 0; i < takeNumber; i++) {
       fragment.appendChild(window.map.renderPin(offers[i]));
     }
     fragment.appendChild(window.map.renderCard(offers[0]));
@@ -73,17 +80,21 @@
     main.appendChild(fragment);
   };
 
+  var removePins = function () {
+    var elem = window.map.getSimilarMapPinElement();
+    var elemPins = elem.querySelectorAll('.map__pin[type="button"]');
+    for (var i = 0; i < elemPins.length; i++) {
+      elem.removeChild(elemPins[i]);
+    }
+  };
+
   var formSuccessHandler = function () {
     document.querySelector('.ad-form').classList.add('ad-form--disabled');
 
     adFormElement.forEach(function (item) {
       item.setAttribute('disabled', 'disabled');
     });
-    var elem = window.map.getSimilarMapPinElement();
-    var elemPins = elem.querySelectorAll('.map__pin[type="button"]');
-    for (var i = 0; i < elemPins.length; i++) {
-      elem.removeChild(elemPins[i]);
-    }
+    removePins();
     window.map.removeCard();
     window.form.getFormElement().reset();
     var mapPinMain = window.map.getMapPinMainElement();
@@ -114,5 +125,7 @@
     errorHandler: errorHandler,
     formSuccessHandler: formSuccessHandler,
     formErrorHandler: formErrorHandler,
+    removePins: removePins,
+    getTakeNumber: getTakeNumber
   };
 })();
