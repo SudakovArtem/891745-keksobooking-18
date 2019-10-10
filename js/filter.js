@@ -6,7 +6,7 @@
   var fragment = window.util.getFragment();
 
   var addNode = function (elem) {
-    for (var i = 0; i < window.page.getTakeNumber(); i++) {
+    for (var i = 0; i < window.page.getTakeNumber(elem); i++) {
       fragment.appendChild(window.map.renderPin(elem[i]));
       window.map.getSimilarMapPinElement().appendChild(fragment);
     }

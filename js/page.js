@@ -9,14 +9,13 @@
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
   var errorElement = errorTemplate.cloneNode(true);
   var errorButton = errorElement.querySelector('.error__button');
-  var takeNumber;
 
   adFormElement.forEach(function (item) {
     item.setAttribute('disabled', 'disabled');
   });
 
-  var getTakeNumber = function () {
-    return takeNumber;
+  var getTakeNumber = function (offers) {
+    return offers.length > 5 ? 5 : offers.length;
   };
 
   var removeErrorElement = function () {
@@ -59,8 +58,7 @@
     });
 
     window.map.getMapElement().classList.remove('map--faded');
-    takeNumber = offers.length > 5 ? 5 : offers.length;
-    for (var i = 0; i < takeNumber; i++) {
+    for (var i = 0; i < getTakeNumber(offers); i++) {
       fragment.appendChild(window.map.renderPin(offers[i]));
     }
     fragment.appendChild(window.map.renderCard(offers[0]));
