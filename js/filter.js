@@ -59,21 +59,21 @@
 
     filteredData = filterByNumber(formData, filteredData, 'guests');
 
-    if (features.length > 0) {
-      features.forEach(function (feature) {
-        filteredData = filteredData.filter(function (pin) {
-          return pin.offer.features.includes(feature);
-        });
+    features.forEach(function (feature) {
+      filteredData = filteredData.filter(function (pin) {
+        return pin.offer.features.includes(feature);
       });
-    }
+    });
 
     return filteredData;
   };
 
-  filterForm.addEventListener('change', function () {
+  var filterFormChangeHandler = function () {
     window.page.removePins();
     var filteredData = getFilterData();
 
     addNode(filteredData);
-  });
+  };
+
+  filterForm.addEventListener('change', window.util.debounce(filterFormChangeHandler));
 })();
