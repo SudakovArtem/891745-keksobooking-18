@@ -43,6 +43,7 @@
 
     xhr.addEventListener('load', function () {
       if (xhr.status === OK_STATUS) {
+        window.data.data = xhr.response;
         onLoad(xhr.response);
       } else {
         onError();
