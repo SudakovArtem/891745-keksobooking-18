@@ -9,6 +9,7 @@
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
   var errorElement = errorTemplate.cloneNode(true);
   var errorButton = errorElement.querySelector('.error__button');
+  var errorMessage = errorElement.querySelector('.error__message');
 
   adFormElement.forEach(function (item) {
     item.setAttribute('disabled', 'disabled');
@@ -105,7 +106,8 @@
     mapPinMain.addEventListener('keydown', window.map.mapPinPressEnterHandler);
   };
 
-  var formErrorHandler = function () {
+  var formErrorHandler = function (errorText) {
+    errorMessage.textContent = errorText;
     fragment.appendChild(errorElement);
     main.appendChild(fragment);
 

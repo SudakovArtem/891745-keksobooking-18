@@ -7,6 +7,8 @@
   var photoFileChooser = document.querySelector('.ad-form__upload input[type=file]');
   var avatarPreview = document.querySelector('.ad-form-header__preview');
   var photoPreview = document.querySelector('.ad-form__photo');
+  var FORMAT_ERROR_MESSAGE = 'Неправильный формат файла';
+  var FILE_ERROR_MESSAGE = 'Ошибка загрузки файла';
 
   var uploadFileHandler = function (fileChooser, preview) {
     var file = fileChooser.files[0];
@@ -31,7 +33,13 @@
         }
       });
 
+      reader.addEventListener('error', function () {
+        window.page.formErrorHandler(FILE_ERROR_MESSAGE);
+      });
+
       reader.readAsDataURL(file);
+    } else {
+      window.page.formErrorHandler(FORMAT_ERROR_MESSAGE);
     }
   };
 

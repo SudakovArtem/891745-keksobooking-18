@@ -10,6 +10,7 @@
   var roomNumberInput = form.querySelector('#room_number');
   var capacityInput = form.querySelector('#capacity');
   var address = document.querySelector('#address');
+  var AD_ERROR_MESSAGE = 'Ошибка загрузки объявления';
 
   var getFormElement = function () {
     return form;
@@ -85,7 +86,7 @@
   };
 
   var formSubmitHandler = function (evt) {
-    window.data.upload(new FormData(form), window.page.formSuccessHandler, window.page.formErrorHandler);
+    window.data.upload(new FormData(form), window.page.formSuccessHandler, window.page.formErrorHandler(AD_ERROR_MESSAGE));
     evt.preventDefault();
   };
 
