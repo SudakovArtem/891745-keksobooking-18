@@ -86,7 +86,9 @@
   };
 
   var formSubmitHandler = function (evt) {
-    window.data.upload(new FormData(form), window.page.formSuccessHandler, window.page.formErrorHandler(AD_ERROR_MESSAGE));
+    window.data.upload(new FormData(form), window.page.formSuccessHandler, function () {
+      window.page.formErrorHandler(AD_ERROR_MESSAGE);
+    });
     evt.preventDefault();
   };
 
