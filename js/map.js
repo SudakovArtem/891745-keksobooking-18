@@ -2,6 +2,8 @@
 
 (function () {
   var CURRENCY = '₽/ночь';
+  var MAX_VALUE_Y = 630;
+  var MIN_VALUE_Y = 130;
   var map = document.querySelector('.map');
   var mapPinMain = map.querySelector('.map__pin--main');
   var mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
@@ -56,9 +58,9 @@
         addressCoords.x = (mapPinMain.offsetLeft - shift.x) + (mapPinMain.offsetWidth / 2);
       }
 
-      if ((startCoords.y + mapPinMain.offsetHeight) <= map.getBoundingClientRect().bottom && (startCoords.y - mapPinMain.offsetHeight / 2) >= map.getBoundingClientRect().top) {
+      if ((mapPinMain.offsetTop - shift.y + mapPinMain.offsetHeight) <= MAX_VALUE_Y && (mapPinMain.offsetTop - shift.y + mapPinMain.offsetHeight) >= MIN_VALUE_Y) {
         mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
-        addressCoords.y = mapPinMain.offsetLeft - shift.x + mapPinMain.offsetHeight;
+        addressCoords.y = mapPinMain.offsetTop - shift.y + mapPinMain.offsetHeight;
       }
     };
 
@@ -84,6 +86,13 @@
   mapPinMain.addEventListener('mousedown', pageActiveHandler);
   mapPinMain.addEventListener('keydown', mapPinPressEnterHandler);
 
+  var removeActivePin = function () {
+    var pinElemActive = map.querySelector('.map__pin--active');
+    if (pinElemActive) {
+      pinElemActive.classList.remove('map__pin--active');
+    }
+  };
+
   var removeCard = function () {
     var cardElem = map.querySelector('.map__card');
     if (cardElem) {
@@ -94,6 +103,7 @@
   var cardPopupEscPressHandler = function (evt) {
     if (evt.keyCode === window.util.getEscKeyCode()) {
       removeCard();
+      removeActivePin();
     }
     document.removeEventListener('keydown', cardPopupEscPressHandler);
   };
@@ -137,6 +147,8 @@
     var fragment = window.util.getFragment();
     var mapCardPopupOpenHandler = function () {
       fragment.appendChild(renderCard(elem));
+      removeActivePin();
+      pinElement.classList.add('map__pin--active');
       removeCard();
       getSimilarMapPinElement().appendChild(fragment);
     };
@@ -163,6 +175,7 @@
     var closeButton = cardElement.querySelector('.popup__close');
     closeButton.addEventListener('click', function () {
       removeCard();
+      removeActivePin();
       document.removeEventListener('keydown', cardPopupEscPressHandler);
     });
 

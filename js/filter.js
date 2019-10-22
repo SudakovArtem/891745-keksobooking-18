@@ -70,6 +70,7 @@
 
   var filterFormChangeHandler = function () {
     window.page.removePins();
+    window.map.removeCard();
     var filteredData = getFilterData();
 
     addNode(filteredData);

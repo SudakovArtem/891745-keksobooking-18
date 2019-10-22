@@ -7,7 +7,9 @@
   var main = document.querySelector('main');
   var fragment = window.util.getFragment();
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+  var successTemplate = document.querySelector('#success').content.querySelector('.success');
   var errorElement = errorTemplate.cloneNode(true);
+  var successElement = successTemplate.cloneNode(true);
   var errorButton = errorElement.querySelector('.error__button');
   var errorMessage = errorElement.querySelector('.error__message');
 
@@ -23,6 +25,13 @@
     var errorElem = main.querySelector('.error');
     if (errorElem) {
       errorElem.remove();
+    }
+  };
+
+  var removeSuccessElement = function () {
+    var successElem = main.querySelector('.success');
+    if (successElem) {
+      successElem.remove();
     }
   };
 
@@ -43,11 +52,18 @@
     errorButton.removeEventListener('keydown', formErrorButtonPressEnterHandler);
   };
 
-  var overlayEscPressHandler = function (evt) {
+  var errorOverlayEscPressHandler = function (evt) {
     if (evt.keyCode === window.util.getEscKeyCode()) {
       removeErrorElement();
     }
-    document.removeEventListener('keydown', overlayEscPressHandler);
+    document.removeEventListener('keydown', errorOverlayEscPressHandler);
+  };
+
+  var successOverlayEscPressHandler = function (evt) {
+    if (evt.keyCode === window.util.getEscKeyCode()) {
+      removeSuccessElement();
+    }
+    document.removeEventListener('keydown', successOverlayEscPressHandler);
   };
 
   var successHandler = function (offers) {
@@ -62,7 +78,6 @@
     for (var i = 0; i < getTakeNumber(offers); i++) {
       fragment.appendChild(window.map.renderPin(offers[i]));
     }
-    fragment.appendChild(window.map.renderCard(offers[0]));
     window.map.getSimilarMapPinElement().appendChild(fragment);
   };
 
@@ -87,7 +102,7 @@
     }
   };
 
-  var formSuccessHandler = function () {
+  var makeAnInitialState = function () {
     document.querySelector('.ad-form').classList.add('ad-form--disabled');
 
     adFormElement.forEach(function (item) {
@@ -106,6 +121,15 @@
     mapPinMain.addEventListener('keydown', window.map.mapPinPressEnterHandler);
   };
 
+  var formSuccessHandler = function () {
+    makeAnInitialState();
+    fragment.appendChild(successElement);
+    main.appendChild(fragment);
+    var successOverlay = main.querySelector('.success');
+    successOverlay.addEventListener('click', removeSuccessElement);
+    document.addEventListener('keydown', successOverlayEscPressHandler);
+  };
+
   var formErrorHandler = function (errorText) {
     errorMessage.textContent = errorText;
     fragment.appendChild(errorElement);
@@ -115,9 +139,9 @@
 
     errorButton.addEventListener('keydown', formErrorButtonPressEnterHandler);
 
-    var overlay = main.querySelector('.error');
-    overlay.addEventListener('click', removeErrorElement);
-    document.addEventListener('keydown', overlayEscPressHandler);
+    var errorOverlay = main.querySelector('.error');
+    errorOverlay.addEventListener('click', removeErrorElement);
+    document.addEventListener('keydown', errorOverlayEscPressHandler);
   };
 
   window.page = {
@@ -126,6 +150,7 @@
     formSuccessHandler: formSuccessHandler,
     formErrorHandler: formErrorHandler,
     removePins: removePins,
-    getTakeNumber: getTakeNumber
+    getTakeNumber: getTakeNumber,
+    makeAnInitialState: makeAnInitialState
   };
 })();

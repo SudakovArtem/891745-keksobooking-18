@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var AD_ERROR_MESSAGE = 'Ошибка загрузки объявления';
   var form = document.querySelector('.ad-form');
   var priceInput = form.querySelector('#price');
   var titleInput = form.querySelector('#title');
@@ -10,7 +11,7 @@
   var roomNumberInput = form.querySelector('#room_number');
   var capacityInput = form.querySelector('#capacity');
   var address = document.querySelector('#address');
-  var AD_ERROR_MESSAGE = 'Ошибка загрузки объявления';
+  var formResetButton = document.querySelector('.ad-form__reset');
 
   var getFormElement = function () {
     return form;
@@ -105,6 +106,10 @@
   titleInput.addEventListener('input', titleInputHandler);
 
   form.addEventListener('submit', formSubmitHandler);
+
+  formResetButton.addEventListener('click', function () {
+    window.page.makeAnInitialState();
+  });
 
   window.form = {
     getAddressValue: getAddressValue,
