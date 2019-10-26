@@ -3,7 +3,9 @@
 (function () {
   var MAP_PIN_MAIN_DEFAULT_X = 570;
   var MAP_PIN_MAIN_DEFAULT_Y = 375;
+  var DEFAULT_AVATAR_SRC = 'img/muffin-grey.svg';
   var adFormElement = document.querySelectorAll('.ad-form__element');
+  var adFormHeader = document.querySelector('.ad-form-header');
   var main = document.querySelector('main');
   var fragment = window.util.getFragment();
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
@@ -13,8 +15,11 @@
   var errorButton = errorElement.querySelector('.error__button');
   var errorMessage = errorElement.querySelector('.error__message');
 
+  adFormHeader.setAttribute('disabled', 'disabled');
+
   adFormElement.forEach(function (item) {
     item.setAttribute('disabled', 'disabled');
+
   });
 
   var getTakeNumber = function (offers) {
@@ -69,6 +74,7 @@
   var successHandler = function (offers) {
     document.querySelector('.ad-form').classList.remove('ad-form--disabled');
 
+    adFormHeader.removeAttribute('disabled');
     adFormElement.forEach(function (item) {
       item.removeAttribute('disabled');
     });
@@ -102,19 +108,23 @@
   };
 
   var makeAnInitialState = function () {
-    document.querySelector('.ad-form').classList.add('ad-form--disabled');
+    var form = window.form.getFormElement();
+    form.classList.add('ad-form--disabled');
+    adFormHeader.setAttribute('disabled', 'disabled');
 
     adFormElement.forEach(function (item) {
       item.setAttribute('disabled', 'disabled');
     });
     removePins();
     window.map.removeCard();
-    window.form.getFormElement().reset();
+    form.reset();
     var mapPinMain = window.map.getMapPinMainElement();
     mapPinMain.style.left = MAP_PIN_MAIN_DEFAULT_X + 'px';
     mapPinMain.style.top = MAP_PIN_MAIN_DEFAULT_Y + 'px';
     window.map.getMapElement().classList.add('map--faded');
     window.form.setDefaultAddressValue();
+    form.querySelector('.ad-form-header__preview img').src = DEFAULT_AVATAR_SRC;
+    form.querySelector('.ad-form__photo').innerHTML = '';
 
     mapPinMain.addEventListener('mousedown', window.map.mapPinMouseDownHandler);
     mapPinMain.addEventListener('mousedown', window.map.pageActiveHandler);
