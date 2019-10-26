@@ -63,11 +63,10 @@
     if (evt.keyCode === window.util.getEscKeyCode()) {
       removeSuccessElement();
     }
-    document.removeEventListener('keydown', successOverlayEscPressHandler);
+    window.removeEventListener('keydown', successOverlayEscPressHandler);
   };
 
   var successHandler = function (offers) {
-    window.pins = offers;
     document.querySelector('.ad-form').classList.remove('ad-form--disabled');
 
     adFormElement.forEach(function (item) {
@@ -115,6 +114,7 @@
     mapPinMain.style.left = MAP_PIN_MAIN_DEFAULT_X + 'px';
     mapPinMain.style.top = MAP_PIN_MAIN_DEFAULT_Y + 'px';
     window.map.getMapElement().classList.add('map--faded');
+    window.form.setDefaultAddressValue();
 
     mapPinMain.addEventListener('mousedown', window.map.mapPinMouseDownHandler);
     mapPinMain.addEventListener('mousedown', window.map.pageActiveHandler);
@@ -127,7 +127,7 @@
     main.appendChild(fragment);
     var successOverlay = main.querySelector('.success');
     successOverlay.addEventListener('click', removeSuccessElement);
-    document.addEventListener('keydown', successOverlayEscPressHandler);
+    window.addEventListener('keydown', successOverlayEscPressHandler);
   };
 
   var formErrorHandler = function (errorText) {

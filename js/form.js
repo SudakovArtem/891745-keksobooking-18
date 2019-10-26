@@ -2,6 +2,7 @@
 
 (function () {
   var AD_ERROR_MESSAGE = 'Ошибка загрузки объявления';
+  var DEFAULT_ADDRESS_VALUE = '585 375';
   var form = document.querySelector('.ad-form');
   var priceInput = form.querySelector('#price');
   var titleInput = form.querySelector('#title');
@@ -16,6 +17,12 @@
   var getFormElement = function () {
     return form;
   };
+
+  var setDefaultAddressValue = function () {
+    address.value = DEFAULT_ADDRESS_VALUE;
+  };
+
+  setDefaultAddressValue();
 
   var getAddressValue = function (obj) {
     address.value = Math.floor(obj.x) + ' ' + Math.floor(obj.y);
@@ -74,6 +81,9 @@
 
   var roomNumberInputHandler = function () {
     for (var i = 0; i < capacityInput.children.length; i++) {
+      if (roomNumberInput.children[i].selected) {
+        capacityInput.children[i].selected = true;
+      }
       if (roomNumberInput.value < capacityInput.children[i].value && !capacityInput.children[i].hasAttribute('disabled')) {
         capacityInput.children[i].setAttribute('disabled', 'disabled');
       } else if (roomNumberInput.value >= capacityInput.children[i].value && capacityInput.children[i].hasAttribute('disabled')) {
@@ -113,6 +123,7 @@
 
   window.form = {
     getAddressValue: getAddressValue,
-    getFormElement: getFormElement
+    getFormElement: getFormElement,
+    setDefaultAddressValue: setDefaultAddressValue
   };
 })();
