@@ -110,26 +110,23 @@
 
   var insertPhotos = function (elem, block) {
     block.innerHTML = '';
-    for (var i = 0; i < elem.offer.photos.length; i++) {
-      block.insertAdjacentHTML('afterbegin', '<img src="' + elem.offer.photos[i] + '" class="popup__photo" width="45" height="40" alt="Фотография жилья">');
-    }
+    elem.offer.photos.forEach(function (item) {
+      block.insertAdjacentHTML('afterbegin', '<img src="' + item + '" class="popup__photo" width="45" height="40" alt="Фотография жилья">');
+    });
   };
 
   var insertFeatures = function (elem, block) {
     block.innerHTML = '';
-    for (var i = 0; i < elem.offer.features.length; i++) {
-      block.insertAdjacentHTML('afterbegin', '<li class="popup__feature popup__feature--' + elem.offer.features[i] + '"></li>');
-    }
+    elem.offer.features.forEach(function (item) {
+      block.insertAdjacentHTML('afterbegin', '<li class="popup__feature popup__feature--' + item + '"></li>');
+    });
   };
 
   var insertType = function (elem) {
     var popupType = cardElement.querySelector('.popup__type');
-    for (var i = 0; i < window.data.TYPE.length; i++) {
-      if (elem.offer.type === window.data.TYPE[i].type) {
-        popupType.textContent = window.data.TYPE[i].textContent;
-        break;
-      }
-    }
+    popupType.textContent = window.data.TYPE.filter(function (item) {
+      return item.type === elem.offer.type;
+    })[0].textContent;
   };
 
   var getCapacityStr = function (numberOfRooms, numberOfGuests) {

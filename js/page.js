@@ -4,6 +4,7 @@
   var MAP_PIN_MAIN_DEFAULT_X = 570;
   var MAP_PIN_MAIN_DEFAULT_Y = 375;
   var DEFAULT_AVATAR_SRC = 'img/muffin-grey.svg';
+  var MAX_OFFERS_LENGTH = 5;
   var adFormElement = document.querySelectorAll('.ad-form__element');
   var adFormHeader = document.querySelector('.ad-form-header');
   var main = document.querySelector('main');
@@ -23,7 +24,7 @@
   });
 
   var getTakeNumber = function (offers) {
-    return offers.length > 5 ? 5 : offers.length;
+    return offers.length > MAX_OFFERS_LENGTH ? MAX_OFFERS_LENGTH : offers.length;
   };
 
   var removeErrorElement = function () {
@@ -101,10 +102,9 @@
 
   var removePins = function () {
     var elem = window.map.getSimilarMapPinElement();
-    var elemPins = elem.querySelectorAll('.map__pin[type="button"]');
-    for (var i = 0; i < elemPins.length; i++) {
-      elem.removeChild(elemPins[i]);
-    }
+    elem.querySelectorAll('.map__pin[type="button"]').forEach(function (item) {
+      elem.removeChild(item);
+    });
   };
 
   var makeAnInitialState = function () {
