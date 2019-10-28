@@ -15,6 +15,7 @@
   var successElement = successTemplate.cloneNode(true);
   var errorButton = errorElement.querySelector('.error__button');
   var errorMessage = errorElement.querySelector('.error__message');
+  var checkboxes = document.querySelectorAll('input[type=checkbox]');
 
   adFormHeader.setAttribute('disabled', 'disabled');
 
@@ -72,6 +73,14 @@
     window.removeEventListener('keydown', successOverlayEscPressHandler);
   };
 
+  var checkboxPressEnterHandler = function (evt) {
+    if (evt.keyCode === window.util.getEnterKeyCode() && evt.target.checked === false) {
+      evt.target.checked = true;
+    } else if (evt.keyCode === window.util.getEnterKeyCode() && evt.target.checked === true) {
+      evt.target.checked = false;
+    }
+  };
+
   var successHandler = function (offers) {
     document.querySelector('.ad-form').classList.remove('ad-form--disabled');
 
@@ -81,10 +90,13 @@
     });
 
     window.map.getMapElement().classList.remove('map--faded');
-    for (var i = 0; i < getTakeNumber(offers); i++) {
-      fragment.appendChild(window.map.renderPin(offers[i]));
-    }
+    offers.slice(0, getTakeNumber(offers)).forEach(function (item) {
+      fragment.appendChild(window.map.renderPin(item));
+    });
     window.map.getSimilarMapPinElement().appendChild(fragment);
+    checkboxes.forEach(function (item) {
+      item.addEventListener('keydown', checkboxPressEnterHandler);
+    });
   };
 
   var errorHandler = function () {
@@ -125,6 +137,10 @@
     window.form.setDefaultAddressValue();
     form.querySelector('.ad-form-header__preview img').src = DEFAULT_AVATAR_SRC;
     form.querySelector('.ad-form__photo').innerHTML = '';
+    checkboxes.forEach(function (item) {
+      item.removeEventListener('keydown', checkboxPressEnterHandler);
+      item.checked = false;
+    });
 
     mapPinMain.addEventListener('mousedown', window.map.mapPinMouseDownHandler);
     mapPinMain.addEventListener('mousedown', window.map.pageActiveHandler);

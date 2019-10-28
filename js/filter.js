@@ -8,10 +8,10 @@
   var filterForm = document.querySelector('.map__filters');
 
   var addNode = function (elem) {
-    for (var i = 0; i < window.page.getTakeNumber(elem); i++) {
-      fragment.appendChild(window.map.renderPin(elem[i]));
+    elem.slice(0, window.page.getTakeNumber(elem)).forEach(function (item) {
+      fragment.appendChild(window.map.renderPin(item));
       window.map.getSimilarMapPinElement().appendChild(fragment);
-    }
+    });
   };
 
   var filterByNumber = function (formData, filteredData, attr) {
