@@ -24,10 +24,6 @@
 
   });
 
-  var getTakeNumber = function (offers) {
-    return offers.length > MAX_OFFERS_LENGTH ? MAX_OFFERS_LENGTH : offers.length;
-  };
-
   var removeErrorElement = function () {
     var errorElem = main.querySelector('.error');
     if (errorElem) {
@@ -89,7 +85,7 @@
     });
 
     window.map.getMapElement().classList.remove('map--faded');
-    offers.slice(0, getTakeNumber(offers)).forEach(function (item) {
+    offers.slice(0, MAX_OFFERS_LENGTH).forEach(function (item) {
       fragment.appendChild(window.map.renderPin(item));
     });
     window.map.getSimilarMapPinElement().appendChild(fragment);
