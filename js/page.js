@@ -74,10 +74,9 @@
   };
 
   var checkboxPressEnterHandler = function (evt) {
-    if (evt.keyCode === window.util.getEnterKeyCode() && evt.target.checked === false) {
-      evt.target.checked = true;
-    } else if (evt.keyCode === window.util.getEnterKeyCode() && evt.target.checked === true) {
-      evt.target.checked = false;
+    var enterKeyCode = window.util.getEnterKeyCode();
+    if (evt.keyCode === enterKeyCode) {
+      evt.target.checked = !evt.target.checked;
     }
   };
 
@@ -176,7 +175,6 @@
     formSuccessHandler: formSuccessHandler,
     formErrorHandler: formErrorHandler,
     removePins: removePins,
-    getTakeNumber: getTakeNumber,
     makeAnInitialState: makeAnInitialState
   };
 })();

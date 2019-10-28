@@ -3,12 +3,13 @@
 (function () {
   var LOW_PRICE = 10000;
   var HIGH_PRICE = 50000;
+  var MAXIMUM_NUMBER_OF_PINS = 5;
 
   var fragment = window.util.getFragment();
   var filterForm = document.querySelector('.map__filters');
 
   var addNode = function (elem) {
-    elem.slice(0, window.page.getTakeNumber(elem)).forEach(function (item) {
+    elem.slice(0, MAXIMUM_NUMBER_OF_PINS).forEach(function (item) {
       fragment.appendChild(window.map.renderPin(item));
       window.map.getSimilarMapPinElement().appendChild(fragment);
     });
