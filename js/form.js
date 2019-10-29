@@ -109,6 +109,12 @@
 
   form.addEventListener('submit', formSubmitHandler);
 
+  form.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === window.util.getEnterKeyCode() && evt.target.parentElement.classList.contains('features')) {
+      evt.preventDefault();
+    }
+  });
+
   formResetButton.addEventListener('click', function () {
     window.page.makeAnInitialState();
   });

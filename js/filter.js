@@ -78,4 +78,8 @@
   };
 
   filterForm.addEventListener('change', window.util.debounce(filterFormChangeHandler));
+
+  window.filter = {
+    formChangeHandler: filterFormChangeHandler
+  };
 })();

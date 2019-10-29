@@ -73,6 +73,9 @@
     var enterKeyCode = window.util.getEnterKeyCode();
     if (evt.keyCode === enterKeyCode) {
       evt.target.checked = !evt.target.checked;
+      if (evt.target.parentElement.classList.contains('map__features')) {
+        window.util.debounce(window.filter.formChangeHandler)();
+      }
     }
   };
 
