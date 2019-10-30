@@ -90,6 +90,12 @@
     evt.preventDefault();
   };
 
+  var formPressEnterHandler = function (evt) {
+    if (evt.keyCode === window.util.getEnterKeyCode() && evt.target.parentElement.classList.contains('features')) {
+      evt.preventDefault();
+    }
+  };
+
   typeInput.addEventListener('change', typeInputHandler);
 
   timeinInput.addEventListener('change', function (evt) {
@@ -109,11 +115,7 @@
 
   form.addEventListener('submit', formSubmitHandler);
 
-  form.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === window.util.getEnterKeyCode() && evt.target.parentElement.classList.contains('features')) {
-      evt.preventDefault();
-    }
-  });
+  form.addEventListener('keydown', formPressEnterHandler);
 
   formResetButton.addEventListener('click', function () {
     window.page.makeAnInitialState();
@@ -122,6 +124,7 @@
   window.form = {
     getAddressValue: getAddressValue,
     getFormElement: getFormElement,
-    setDefaultAddressValue: setDefaultAddressValue
+    setDefaultAddressValue: setDefaultAddressValue,
+    pressEnterHandler: formPressEnterHandler
   };
 })();

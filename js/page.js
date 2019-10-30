@@ -139,6 +139,7 @@
       item.removeEventListener('keydown', checkboxPressEnterHandler);
       item.checked = false;
     });
+    form.removeEventListener('keydown', window.form.pressEnterHandler);
 
     mapPinMain.addEventListener('mousedown', window.map.mapPinMouseDownHandler);
     mapPinMain.addEventListener('mousedown', window.map.pageActiveHandler);
