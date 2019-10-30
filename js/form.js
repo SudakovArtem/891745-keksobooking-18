@@ -3,6 +3,7 @@
 (function () {
   var AD_ERROR_MESSAGE = 'Ошибка загрузки объявления';
   var DEFAULT_ADDRESS_VALUE = '585 375';
+  var FEATURES_CLASS_NAME = 'features';
   var ROOMS_CAPACITY = {
     '1': [1],
     '2': [2, 1],
@@ -91,7 +92,7 @@
   };
 
   var formPressEnterHandler = function (evt) {
-    if (evt.keyCode === window.util.getEnterKeyCode() && evt.target.parentElement.classList.contains('features')) {
+    if (evt.keyCode === window.util.getEnterKeyCode() && evt.target.parentElement.classList.contains(FEATURES_CLASS_NAME)) {
       evt.preventDefault();
     }
   };
