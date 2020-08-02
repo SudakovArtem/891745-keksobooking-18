@@ -3,7 +3,7 @@
 (function () {
   var TIMEOUT_VALUE = 10000;
   var OK_STATUS = 200;
-  var GET_URL = 'https://js.dump.academy/keksobooking/data';
+  var GET_URL = './data/data.json';
   var POST_URL = 'https://js.dump.academy/keksobooking';
 
   var getTypes = function () {
